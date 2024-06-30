@@ -3,22 +3,19 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { AvatarRenderer } from '~/components/avatar-renderer';
+import { ImageUploaderField } from '~/components/forms/image-uploader-field';
 import { InputField } from '~/components/forms/input-field';
+import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from '~/components/ui/form';
-import { Input } from '~/components/ui/input';
+import { Form } from '~/components/ui/form';
 
 const registerSchema = z.object({
   name: z.string(),
   email: z.string().email(),
   password: z.string(),
   confirmPassword: z.string(),
+  image: z.instanceof(File).nullable(),
 });
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
@@ -31,7 +28,7 @@ export function RegisterForm() {
       email: '',
       password: '',
       confirmPassword: '',
-      // image: ""
+      image: null,
     },
   });
 
@@ -45,6 +42,16 @@ export function RegisterForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className='space-y-4'
       >
+        <ImageUploaderField<RegisterFormValues>
+          name='image'
+          avatarRenderer={({ openFileSelector, previewSrc }) => (
+            <AvatarRenderer
+              openFileSelector={openFileSelector}
+              previewSrc={previewSrc}
+            />
+          )}
+        />
+
         <InputField<RegisterFormValues>
           name='name'
           label='Name'
