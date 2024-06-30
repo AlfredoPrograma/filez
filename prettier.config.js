@@ -3,6 +3,7 @@ const config = {
   singleQuote: true,
   jsxSingleQuote: true,
   tabWidth: 2,
+  singleAttributePerLine: true,
   plugins: ["prettier-plugin-tailwindcss"],
 };
 
