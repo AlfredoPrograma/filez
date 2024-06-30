@@ -23,7 +23,7 @@ export const env = createEnv({
       process.env.VERCEL ? z.string() : z.string().url()
     ),
     PASSWORD_HASH_ROUNDS:
-      z.number().min(10)
+      z.coerce.number().min(10)
   },
 
   /**
