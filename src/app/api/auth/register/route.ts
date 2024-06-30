@@ -9,8 +9,10 @@ const registerSchema = z.object({
   name: z.string(),
   email: z.string(),
   password: z.string(),
-  image: z.string(), // TODO: add `.url()` validation once S3 bucket uploading is done
+  image: z.string().nullable(), // TODO: add `.url()` validation once S3 bucket uploading is done
 });
+
+export type RegisterPayload = z.infer<typeof registerSchema>;
 
 export async function POST(req: NextRequest) {
   const body = (await req.json()) as unknown;

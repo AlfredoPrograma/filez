@@ -6,9 +6,10 @@ import { z } from 'zod';
 import { AvatarRenderer } from '~/components/avatar-renderer';
 import { ImageUploaderField } from '~/components/forms/image-uploader-field';
 import { InputField } from '~/components/forms/input-field';
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
-import { Button } from '~/components/ui/button';
 import { Form } from '~/components/ui/form';
+import { useRegisterMutation } from '../mutations/userRegisterMutation';
+import { type RegisterPayload } from '~/app/api/auth/register/route';
+import { LoadingButton } from '~/components/loading-button';
 
 const registerSchema = z.object({
   name: z.string(),
@@ -21,6 +22,7 @@ const registerSchema = z.object({
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export function RegisterForm() {
+  const registerMutation = useRegisterMutation();
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -33,7 +35,14 @@ export function RegisterForm() {
   });
 
   function onSubmit(formValues: RegisterFormValues) {
-    console.log(formValues);
+    const payload = {
+      name: formValues.name,
+      email: formValues.email,
+      password: formValues.password,
+      image: null,
+    } satisfies RegisterPayload;
+
+    registerMutation.mutate(payload);
   }
 
   return (
@@ -75,13 +84,14 @@ export function RegisterForm() {
           type='password'
         />
 
-        <Button
+        <LoadingButton
           type='submit'
           size='lg'
           className='w-full'
+          isLoading={registerMutation.isPending}
         >
           Create account
-        </Button>
+        </LoadingButton>
       </form>
     </Form>
   );
