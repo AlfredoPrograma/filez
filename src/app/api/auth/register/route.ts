@@ -9,10 +9,13 @@ const registerSchema = z.object({
   name: z.string(),
   email: z.string(),
   password: z.string(),
-  image: z.string().nullable(), // TODO: add `.url()` validation once S3 bucket uploading is done
 });
 
 export type RegisterPayload = z.infer<typeof registerSchema>;
+export type RegisterResponse = {
+  userId: string;
+  message: string;
+};
 
 export async function POST(req: NextRequest) {
   const body = (await req.json()) as unknown;
@@ -38,17 +41,17 @@ export async function POST(req: NextRequest) {
     env.PASSWORD_HASH_ROUNDS,
   );
 
-  await db.user.create({
+  const { id } = await db.user.create({
     data: {
       name: payload.name,
       email: payload.email,
       password: hashedPassword,
-      image: payload.image,
     },
   });
 
   return Response.json(
     {
+      userId: id,
       message: 'User registered successfully',
     },
     {

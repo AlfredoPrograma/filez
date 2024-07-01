@@ -22,7 +22,8 @@ const registerSchema = z.object({
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export function RegisterForm() {
-  const registerMutation = useRegisterMutation();
+  const { registerMutation, uploadProfileImageMutation } =
+    useRegisterMutation();
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -34,15 +35,26 @@ export function RegisterForm() {
     },
   });
 
-  function onSubmit(formValues: RegisterFormValues) {
+  async function onSubmit(formValues: RegisterFormValues) {
     const payload = {
       name: formValues.name,
       email: formValues.email,
       password: formValues.password,
-      image: null,
     } satisfies RegisterPayload;
 
-    registerMutation.mutate(payload);
+    await registerMutation.mutateAsync(payload);
+
+    if (!formValues.image) return;
+
+    const [imageUrl] =
+      (await uploadProfileImageMutation.mutateAsync({
+        imageFile: [formValues.image],
+      })) ?? [];
+
+    console.log(imageUrl);
+
+    // TODO: implement PUT /user/profile endpoint for update user profile data
+    // and update its image url field on image upload
   }
 
   return (
@@ -88,7 +100,9 @@ export function RegisterForm() {
           type='submit'
           size='lg'
           className='w-full'
-          isLoading={registerMutation.isPending}
+          isLoading={
+            registerMutation.isPending || uploadProfileImageMutation.isPending
+          }
         >
           Create account
         </LoadingButton>
