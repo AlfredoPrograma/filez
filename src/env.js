@@ -23,7 +23,9 @@ export const env = createEnv({
       process.env.VERCEL ? z.string() : z.string().url()
     ),
     PASSWORD_HASH_ROUNDS:
-      z.coerce.number().min(10)
+      z.coerce.number().min(10),
+    UPLOADTHING_SECRET: z.string(),
+    UPLOADTHING_APP_ID: z.string(),
   },
 
   /**
@@ -45,6 +47,8 @@ export const env = createEnv({
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     PASSWORD_HASH_ROUNDS: process.env.PASSWORD_HASH_ROUNDS,
+    UPLOADTHING_SECRET: process.env.UPLOADTHING_SECRET,
+    UPLOADTHING_APP_ID: process.env.UPLOADTHING_APP_ID,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
