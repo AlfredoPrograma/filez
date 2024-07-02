@@ -3,6 +3,10 @@ import {
   type RegisterResponse,
   type RegisterPayload,
 } from '~/app/api/auth/register/route';
+import {
+  type UpdateUserPayload,
+  type UpdateUserResponse,
+} from '~/app/api/user/route';
 import { api } from '~/lib/api';
 import { useUploadThing } from '~/lib/uploadthing';
 
@@ -15,10 +19,20 @@ export function useRegisterMutation() {
       await startUpload(payload.imageFile),
   });
 
+  const updateUserMutation = useMutation({
+    mutationFn: async (payload: UpdateUserPayload) => {
+      await api.put<UpdateUserResponse>('/user', payload);
+    },
+  });
+
   const registerMutation = useMutation({
     mutationFn: async (payload: RegisterPayload) =>
       await api.post<RegisterResponse>('/auth/register', payload),
   });
 
-  return { registerMutation, uploadProfileImageMutation };
+  return {
+    registerMutation,
+    uploadProfileImageMutation,
+    updateUserMutation,
+  };
 }
