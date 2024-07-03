@@ -1,16 +1,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card';
-import { RegisterForm } from './components/register-form';
+import { AuthenticationMethods } from './components/authentication-methods';
 
-export default function RegisterPage() {
+export default async function AuthPage() {
   return (
     <main className='flex h-screen items-center justify-center bg-gray-100'>
-      <Card className='w-full sm:w-2/3 md:w-1/2 lg:w-1/3 xl:w-1/4'>
+      <Card>
         <CardHeader>
-          <CardTitle className='text-center'>Register</CardTitle>
+          <CardTitle>Filez</CardTitle>
         </CardHeader>
 
         <CardContent>
-          <RegisterForm />
+          <AuthenticationMethods />
         </CardContent>
       </Card>
     </main>
