@@ -12,20 +12,21 @@ datasource db {
 
 // Necessary for Next auth
 model Account {
-    id                    String  @id @default(cuid())
-    userId                String
-    type                  String
-    provider              String
-    providerAccountId     String
-    refreshToken          String? @map("refresh_token")
-    accessToken           String? @map("access_token")
-    expiresAt             Int?    @map("expires_at")
-    tokenType             String? @map("token_type")
-    scope                 String?
-    idToken               String? @map("id_token")
-    sessionState          String? @map("session_state")
-    user                  User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-    refreshTokenExpiresIn Int?    @map("refresh_token_expires_in")
+    id                       String  @id @default(cuid())
+    userId                   String
+    type                     String
+    provider                 String
+    providerAccountId        String
+    refresh_token            String?
+    access_token             String?
+    expires_at               Int?
+    token_type               String?
+    scope                    String?
+    id_token                 String?
+    session_state            String?
+    refresh_token_expires_in Int?
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([provider, providerAccountId])
 }
@@ -51,7 +52,6 @@ model User {
     name          String?
     email         String?   @unique
     emailVerified DateTime?
-    password      String
     image         String?
     createdAt     DateTime  @default(now())
     updatedAt     DateTime  @updatedAt
